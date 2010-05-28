@@ -30,7 +30,7 @@ public class GpsTracker extends MapActivity implements LocationListener{
         setContentView(R.layout.main);
         this.textViewMessage = (TextView)findViewById(R.id.textViewMessage);
         lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        this.map = (MapView)findViewById(R.id.mapview); 
+        this.map = (MapView)findViewById(R.id.mapview);
     }
 	
     @Override
@@ -94,4 +94,18 @@ public class GpsTracker extends MapActivity implements LocationListener{
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
+	
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);        
+        bundle.putString("textViewMessage", this.textViewMessage.getText().toString() );
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle bundle) {
+        super.onRestoreInstanceState(bundle);
+        this.textViewMessage.setText(bundle.getString("textViewMessage"));        
+
+    }
+    
 }
