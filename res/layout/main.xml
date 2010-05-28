@@ -9,5 +9,15 @@
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
     android:id="@+id/textViewMessage" android:text="@string/message"/>
+        
+<com.google.android.maps.MapView
+	android:id="@+id/mapview"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:enabled="true"
+	android:clickable="true"
+	android:apiKey="0y0rb2n5OYga60X7toG-HzSYQh2ICnOT27xI4LA"
+	/>
+
 
 </LinearLayout>
