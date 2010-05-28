@@ -1,23 +1,19 @@
 package org.shokai.gpstracker;
 
 import android.os.Bundle;
-import com.google.android.maps.MapView;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
+import com.google.android.maps.*;
 import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.view.MenuItem;
-import android.view.Menu;
-import android.widget.TextView;
+import android.location.*;
+import android.view.*;
+import android.widget.*;
 
 public class GpsTracker extends MapActivity implements LocationListener{
 	
 	private MapView map;
 	private TextView textViewMessage;
 	private LocationManager lm;
+	private MyLocationOverlay myOverlay;
+	private final int zoom_default = 18;
 	
 	private static class MenuId{
     	private static final int START_GPS = 1;
@@ -32,7 +28,10 @@ public class GpsTracker extends MapActivity implements LocationListener{
         setContentView(R.layout.main);
         this.textViewMessage = (TextView)findViewById(R.id.textViewMessage);
         lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        this.map = (MapView)findViewById(R.id.mapview);
+        map = (MapView)findViewById(R.id.mapview);
+        myOverlay = new MyLocationOverlay(getApplicationContext(), map);
+        myOverlay.onProviderEnabled(LocationManager.GPS_PROVIDER);
+        map.getOverlays().add(myOverlay);
     }
 	
     @Override
@@ -50,10 +49,14 @@ public class GpsTracker extends MapActivity implements LocationListener{
     	switch (item.getItemId()) {
 		case MenuId.START_GPS:
 			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this); // 5(sec), 10(meter)
+	        myOverlay.enableMyLocation();
+	        myOverlay.enableCompass();
 			message("Start GPS");
 			break;
 		case MenuId.STOP_GPS:
 			lm.removeUpdates(this);
+			myOverlay.disableCompass();
+			myOverlay.disableMyLocation();
 			message("Stop GPS");
 			break;
 		case MenuId.LAST_LOCATION:
@@ -61,11 +64,11 @@ public class GpsTracker extends MapActivity implements LocationListener{
 			double lat = loc.getLatitude();
 			double lon = loc.getLongitude();
 			message("last lat:"+Double.toString(lat) + ", lon:" + Double.toString(lon));
-			this.setPosition(lat, lon, 16);
+			this.setPosition(lat, lon, this.zoom_default);
 			break;
 		case MenuId.SET_ZOOM:
 			MapController mc = map.getController();
-			mc.setZoom(16);
+			mc.setZoom(this.zoom_default);
 			break;
     	}
     	return true;
@@ -75,11 +78,13 @@ public class GpsTracker extends MapActivity implements LocationListener{
     	MapController mc = map.getController();
     	mc.setCenter(new GeoPoint( (int)(lat*1E6), (int)(lon*1E6) ));
     	mc.setZoom(zoom);
+    	this.myOverlay.getMyLocation();
     }
 	
     // zoomは変更せずに地図だけ動かす
     public void setPosition(double lat, double lon){
     	this.setPosition(lat, lon, map.getZoomLevel());
+    	
     }
     
 	public void message(String mes){
@@ -116,8 +121,7 @@ public class GpsTracker extends MapActivity implements LocationListener{
     @Override
     protected void onRestoreInstanceState(Bundle bundle) {
         super.onRestoreInstanceState(bundle);
-        this.textViewMessage.setText(bundle.getString("textViewMessage"));        
-
+        this.textViewMessage.setText(bundle.getString("textViewMessage"));
     }
     
 }
