@@ -1,5 +1,4 @@
 *.log
-*.class
 *~
 .DS_Store
 db/*

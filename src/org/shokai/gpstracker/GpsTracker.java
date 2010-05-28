@@ -47,6 +47,7 @@ public class GpsTracker extends Activity implements LocationListener{
 		case MenuId.STOP_GPS:
 			lm.removeUpdates(this);
 			message("Stop GPS");
+			
 			break;
 		case MenuId.LAST_LOCATION:
 			Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
