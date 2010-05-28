@@ -4,11 +4,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/buttonPostLocation" android:id="@+id/buttonPostLocation"></Button>
+
 <TextView  
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:text="@string/hello"
-    android:id="@+id/textViewMessage"/>
+    android:id="@+id/textViewMessage" android:text="@string/message"/>
 
 </LinearLayout>
