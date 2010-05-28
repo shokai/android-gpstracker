@@ -14,10 +14,10 @@ public class GpsTracker extends MapActivity implements LocationListener{
 	private LocationManager lm;
 	private MyLocationOverlay myOverlay;
 	private final int zoom_default = 18;
+	private boolean location_enalbed = false; // GPSとコンパスを動かしているかどうか
 	
 	private static class MenuId{
     	private static final int START_GPS = 1;
-    	private static final int STOP_GPS = 2;
     	private static final int LAST_LOCATION = 3;
     	private static final int SET_ZOOM = 4;
     	private static final int SATELLITE_TOGGLE = 5;
@@ -39,10 +39,9 @@ public class GpsTracker extends MapActivity implements LocationListener{
     public boolean onCreateOptionsMenu(Menu menu) {
       boolean supRetVal = super.onCreateOptionsMenu(menu);
       menu.add(0, MenuId.START_GPS, 0, "Start GPS");
-      menu.add(0, MenuId.STOP_GPS, 0, "Stop GPS");
       menu.add(0, MenuId.LAST_LOCATION, 0, "Last Location");
-      menu.add(0, MenuId.SET_ZOOM, 0, "zoom");
-      menu.add(0, MenuId.SATELLITE_TOGGLE, 0, "show satelite");
+      menu.add(0, MenuId.SET_ZOOM, 0, "Zoom");
+      menu.add(0, MenuId.SATELLITE_TOGGLE, 0, "Show Satellite");
       return supRetVal;
     }
     
@@ -50,16 +49,22 @@ public class GpsTracker extends MapActivity implements LocationListener{
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
 		case MenuId.START_GPS:
-			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this); // 5(sec), 10(meter)
-	        myOverlay.enableMyLocation();
-	        myOverlay.enableCompass();
-			message("Start GPS");
-			break;
-		case MenuId.STOP_GPS:
-			lm.removeUpdates(this);
-			myOverlay.disableCompass();
-			myOverlay.disableMyLocation();
-			message("Stop GPS");
+			if(!this.location_enalbed){
+				lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this); // 5(sec), 10(meter)
+		        myOverlay.enableMyLocation();
+		        myOverlay.enableCompass();
+		        message("Start GPS");
+		        this.location_enalbed = true;
+		        item.setTitle("Stop GPS");
+			}
+			else{
+				lm.removeUpdates(this);
+				myOverlay.disableCompass();
+				myOverlay.disableMyLocation();
+				message("Stop GPS");
+				this.location_enalbed = false;
+				item.setTitle("GPS Start");
+			}
 			break;
 		case MenuId.LAST_LOCATION:
 			Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -75,11 +80,11 @@ public class GpsTracker extends MapActivity implements LocationListener{
 		case MenuId.SATELLITE_TOGGLE:
 			if(map.isSatellite()){
 				map.setSatellite(false);
-				if(!map.isSatellite()) item.setTitle("show satellite");
+				if(!map.isSatellite()) item.setTitle("Show Satellite");
 			}
 			else{
 				map.setSatellite(true);
-				if(map.isSatellite()) item.setTitle("hide satellite");
+				if(map.isSatellite()) item.setTitle("Hide Satellite");
 			}
 			break;
     	}
