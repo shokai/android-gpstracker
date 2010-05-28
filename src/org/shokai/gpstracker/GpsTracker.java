@@ -23,7 +23,9 @@ public class GpsTracker extends MapActivity implements LocationListener{
     	private static final int START_GPS = 1;
     	private static final int STOP_GPS = 2;
     	private static final int LAST_LOCATION = 3;
+    	private static final int SET_ZOOM = 4;
 	}
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,7 @@ public class GpsTracker extends MapActivity implements LocationListener{
       menu.add(0, MenuId.START_GPS, 0, "Start GPS");
       menu.add(0, MenuId.STOP_GPS, 0, "Stop GPS");
       menu.add(0, MenuId.LAST_LOCATION, 0, "Last Location");
+      menu.add(0, MenuId.SET_ZOOM, 0, "zoom");
       return supRetVal;
     }
     
@@ -57,8 +60,12 @@ public class GpsTracker extends MapActivity implements LocationListener{
 			Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 			double lat = loc.getLatitude();
 			double lon = loc.getLongitude();
-			message("last: "+Double.toString(lat) + ", " + Double.toString(lon));
+			message("last lat:"+Double.toString(lat) + ", lon:" + Double.toString(lon));
 			this.setPosition(lat, lon, 16);
+			break;
+		case MenuId.SET_ZOOM:
+			MapController mc = map.getController();
+			mc.setZoom(16);
 			break;
     	}
     	return true;
@@ -70,6 +77,11 @@ public class GpsTracker extends MapActivity implements LocationListener{
     	mc.setZoom(zoom);
     }
 	
+    // zoomは変更せずに地図だけ動かす
+    public void setPosition(double lat, double lon){
+    	this.setPosition(lat, lon, map.getZoomLevel());
+    }
+    
 	public void message(String mes){
 		this.textViewMessage.setText(mes);
 	}
@@ -77,8 +89,8 @@ public class GpsTracker extends MapActivity implements LocationListener{
 	public void onLocationChanged(Location location) {
         double lat = location.getLatitude();
         double lon = location.getLongitude();
-		message("update: "+Double.toString(lat)+", "+Double.toString(lon));
-		this.setPosition(lat, lon, 16);
+		message("lat:"+Double.toString(lat)+", lon:"+Double.toString(lon));
+		this.setPosition(lat, lon);
 	}
 
 	public void onProviderDisabled(String provider) {
