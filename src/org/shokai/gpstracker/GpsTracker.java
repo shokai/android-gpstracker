@@ -20,8 +20,7 @@ public class GpsTracker extends MapActivity implements LocationListener{
     	private static final int STOP_GPS = 2;
     	private static final int LAST_LOCATION = 3;
     	private static final int SET_ZOOM = 4;
-    	private static final int SATELLITE_ON = 5;
-    	private static final int SATELLITE_OFF = 6;
+    	private static final int SATELLITE_TOGGLE = 5;
 	}
 	
     @Override
@@ -43,8 +42,7 @@ public class GpsTracker extends MapActivity implements LocationListener{
       menu.add(0, MenuId.STOP_GPS, 0, "Stop GPS");
       menu.add(0, MenuId.LAST_LOCATION, 0, "Last Location");
       menu.add(0, MenuId.SET_ZOOM, 0, "zoom");
-      menu.add(0, MenuId.SATELLITE_ON, 0, "show satelite");
-      menu.add(0, MenuId.SATELLITE_OFF, 0, "hide satelite");
+      menu.add(0, MenuId.SATELLITE_TOGGLE, 0, "show satelite");
       return supRetVal;
     }
     
@@ -74,11 +72,15 @@ public class GpsTracker extends MapActivity implements LocationListener{
 			MapController mc = map.getController();
 			mc.setZoom(this.zoom_default);
 			break;
-		case MenuId.SATELLITE_ON:
-			map.setSatellite(true);
-			break;
-		case MenuId.SATELLITE_OFF:
-			map.setSatellite(false);
+		case MenuId.SATELLITE_TOGGLE:
+			if(map.isSatellite()){
+				map.setSatellite(false);
+				if(!map.isSatellite()) item.setTitle("show satellite");
+			}
+			else{
+				map.setSatellite(true);
+				if(map.isSatellite()) item.setTitle("hide satellite");
+			}
 			break;
     	}
     	return true;
