@@ -2,10 +2,12 @@ package org.shokai.gpstracker;
 
 import android.os.Bundle;
 import com.google.android.maps.*;
+
 import android.content.Context;
 import android.location.*;
 import android.view.*;
 import android.widget.*;
+import java.util.*;
 
 public class GpsTracker extends MapActivity implements LocationListener{
 	
@@ -15,12 +17,15 @@ public class GpsTracker extends MapActivity implements LocationListener{
 	private MyLocationOverlay myOverlay;
 	private final int zoom_default = 18;
 	private boolean location_enalbed = false; // GPSとコンパスを動かしているかどうか
+	private LogOverlay logOverlay;
+	private List<GeoPoint> points;
 	
 	private static class MenuId{
     	private static final int START_GPS = 1;
-    	private static final int LAST_LOCATION = 3;
-    	private static final int SET_ZOOM = 4;
-    	private static final int SATELLITE_TOGGLE = 5;
+    	private static final int LAST_LOCATION = 2;
+    	private static final int SET_ZOOM = 3;
+    	private static final int SATELLITE_TOGGLE = 4;
+    	private static final int LOG_TOGGLE = 5;
 	}
 	
     @Override
@@ -32,7 +37,10 @@ public class GpsTracker extends MapActivity implements LocationListener{
         map = (MapView)findViewById(R.id.mapview);
         myOverlay = new MyLocationOverlay(getApplicationContext(), map);
         myOverlay.onProviderEnabled(LocationManager.GPS_PROVIDER);
+        
+        this.points = new ArrayList<GeoPoint>();
         map.getOverlays().add(myOverlay);
+        logOverlay = new LogOverlay(points);
     }
 	
     @Override
@@ -41,7 +49,8 @@ public class GpsTracker extends MapActivity implements LocationListener{
       menu.add(0, MenuId.START_GPS, 0, "Start GPS");
       menu.add(0, MenuId.LAST_LOCATION, 0, "Last Location");
       menu.add(0, MenuId.SET_ZOOM, 0, "Zoom");
-      menu.add(0, MenuId.SATELLITE_TOGGLE, 0, "Show Satellite");
+      menu.add(0, MenuId.SATELLITE_TOGGLE, 0, "Satellite/Map");
+      menu.add(0, MenuId.LOG_TOGGLE, 0, "Show Logs");
       return supRetVal;
     }
     
@@ -63,7 +72,7 @@ public class GpsTracker extends MapActivity implements LocationListener{
 				myOverlay.disableMyLocation();
 				message("Stop GPS");
 				this.location_enalbed = false;
-				item.setTitle("GPS Start");
+				item.setTitle("Start GPS");
 			}
 			break;
 		case MenuId.LAST_LOCATION:
@@ -80,11 +89,19 @@ public class GpsTracker extends MapActivity implements LocationListener{
 		case MenuId.SATELLITE_TOGGLE:
 			if(map.isSatellite()){
 				map.setSatellite(false);
-				if(!map.isSatellite()) item.setTitle("Show Satellite");
 			}
 			else{
 				map.setSatellite(true);
-				if(map.isSatellite()) item.setTitle("Hide Satellite");
+			}
+			break;
+		case MenuId.LOG_TOGGLE:
+			if(map.getOverlays().contains(logOverlay)){
+				map.getOverlays().remove(logOverlay);
+				item.setTitle("Show Logs");
+			}
+			else{
+				map.getOverlays().add(logOverlay);
+				item.setTitle("Hide Logs");
 			}
 			break;
     	}
@@ -93,9 +110,11 @@ public class GpsTracker extends MapActivity implements LocationListener{
     
     public void setPosition(double lat, double lon, int zoom){
     	MapController mc = map.getController();
-    	mc.setCenter(new GeoPoint( (int)(lat*1E6), (int)(lon*1E6) ));
+    	GeoPoint p = new GeoPoint((int)(lat*1E6), (int)(lon*1E6));
+    	mc.setCenter(p);
     	mc.setZoom(zoom);
     	this.myOverlay.getMyLocation();
+    	points.add(p);
     }
 	
     // zoomは変更せずに地図だけ動かす
