@@ -16,9 +16,8 @@ public class GpsTracker extends MapActivity implements LocationListener{
 	private LocationManager lm;
 	private MyLocationOverlay myOverlay;
 	private final int zoom_default = 18;
-	private boolean location_enalbed = false; // GPSとコンパスを動かしているかどうか
+	private boolean location_enalbed, log_enabled; // GPSとコンパスを動かしているかどうか、logを表示しているかどうか
 	private LogOverlay logOverlay;
-	private List<GeoPoint> points;
 	
 	private static class MenuId{
     	private static final int START_GPS = 1;
@@ -26,6 +25,10 @@ public class GpsTracker extends MapActivity implements LocationListener{
     	private static final int SET_ZOOM = 3;
     	private static final int SATELLITE_TOGGLE = 4;
     	private static final int LOG_TOGGLE = 5;
+	}
+	
+	public GpsTracker(){
+        this.location_enalbed = false;
 	}
 	
     @Override
@@ -37,10 +40,8 @@ public class GpsTracker extends MapActivity implements LocationListener{
         map = (MapView)findViewById(R.id.mapview);
         myOverlay = new MyLocationOverlay(getApplicationContext(), map);
         myOverlay.onProviderEnabled(LocationManager.GPS_PROVIDER);
-        
-        this.points = new ArrayList<GeoPoint>();
         map.getOverlays().add(myOverlay);
-        logOverlay = new LogOverlay(points);
+		logOverlay = new LogOverlay();
     }
 	
     @Override
@@ -85,6 +86,7 @@ public class GpsTracker extends MapActivity implements LocationListener{
 		case MenuId.SET_ZOOM:
 			MapController mc = map.getController();
 			mc.setZoom(this.zoom_default);
+			map.getOverlays().add(logOverlay);
 			break;
 		case MenuId.SATELLITE_TOGGLE:
 			if(map.isSatellite()){
@@ -95,14 +97,18 @@ public class GpsTracker extends MapActivity implements LocationListener{
 			}
 			break;
 		case MenuId.LOG_TOGGLE:
-			if(map.getOverlays().contains(logOverlay)){
-				map.getOverlays().remove(logOverlay);
-				item.setTitle("Show Logs");
-			}
-			else{
+			if(!this.log_enabled){
 				map.getOverlays().add(logOverlay);
 				item.setTitle("Hide Logs");
+				message("logs: "+Integer.toString(logOverlay.size()));
+				log_enabled = true;
 			}
+			else{
+				map.getOverlays().remove(logOverlay);
+				item.setTitle("Show Logs");
+				log_enabled = false;
+			}
+			map.invalidate(); // すぐ再描画
 			break;
     	}
     	return true;
@@ -114,13 +120,12 @@ public class GpsTracker extends MapActivity implements LocationListener{
     	mc.setCenter(p);
     	mc.setZoom(zoom);
     	this.myOverlay.getMyLocation();
-    	points.add(p);
+    	logOverlay.add(p);
     }
 	
     // zoomは変更せずに地図だけ動かす
     public void setPosition(double lat, double lon){
     	this.setPosition(lat, lon, map.getZoomLevel());
-    	
     }
     
 	public void message(String mes){

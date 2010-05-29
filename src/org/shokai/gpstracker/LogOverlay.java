@@ -3,20 +3,18 @@ package org.shokai.gpstracker;
 import java.util.*;
 import android.graphics.*;
 import android.graphics.Paint.*;
-import android.graphics.drawable.*;
 import com.google.android.maps.*;
 
 public class LogOverlay extends Overlay {
 
-	private Projection projection; private Paint linePaint;
+	private Paint linePaint;
 	private List<GeoPoint> points;
 	
-	public LogOverlay(List<GeoPoint> points) {
-		this.points = points;
-		
+	public LogOverlay() {
+		this.points = new ArrayList<GeoPoint>();
 		this.linePaint = new Paint();
 	    linePaint.setARGB(255, 255, 0, 0);
-	    linePaint.setStrokeWidth(3);
+	    linePaint.setStrokeWidth(2);
 	    linePaint.setDither(true);
 	    linePaint.setStyle(Style.FILL);
 	    linePaint.setAntiAlias(true);
@@ -24,18 +22,28 @@ public class LogOverlay extends Overlay {
 	    linePaint.setStrokeCap(Paint.Cap.ROUND);
 	}
 	
+	public void add(GeoPoint p){
+		points.add(p);
+	}
+	
 	@Override
 	public void draw(Canvas canvas, MapView view, boolean shadow){
-	    int size = points.size();
-	    Point lastPoint = new Point();
-	    if(size == 0) return;
-	    view.getProjection().toPixels(points.get(0), lastPoint);
-	    Point point = new Point();
-	    for(int i = 1; i<size; i++){
-	       view.getProjection().toPixels(points.get(i), point);
-     	   canvas.drawLine(lastPoint.x, lastPoint.y, point.x, point.y, linePaint);
-	       lastPoint = point;
+		if(points.size() < 2) return;
+	    Point p_a = new Point();
+	    Point p_b = new Point();
+	    for(int i = 0; i < points.size()-1; i++){
+			view.getProjection().toPixels(points.get(i), p_a);
+			view.getProjection().toPixels(points.get(i+1), p_b);
+			canvas.drawLine(p_a.x, p_a.y, p_b.x, p_b.y, linePaint);
 	    }
+	}
+	
+	public int size(){
+		return points.size();
+	}
+	
+	public List<GeoPoint> getPoints(){
+		return this.points;
 	}
 
 }
