@@ -97,7 +97,7 @@ public class GpsTracker extends MapActivity implements LocationListener{
 			}
 			break;
 		case MenuId.LOG_TOGGLE:
-			if(!this.log_enabled){
+			if(this.log_enabled != true){
 				map.getOverlays().add(logOverlay);
 				item.setTitle("Hide Logs");
 				message("logs: "+Integer.toString(logOverlay.size()));
