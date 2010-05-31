@@ -2,7 +2,6 @@ package org.shokai.gpstracker;
 
 import android.os.Bundle;
 import com.google.android.maps.*;
-
 import android.content.Context;
 import android.location.*;
 import android.view.*;
@@ -151,19 +150,6 @@ public class GpsTracker extends MapActivity implements LocationListener {
     @Override
     protected boolean isRouteDisplayed() {
         return false;
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle bundle) {
-        super.onSaveInstanceState(bundle);
-        bundle.putString("textViewMessage", this.textViewMessage.getText()
-                .toString());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle bundle) {
-        super.onRestoreInstanceState(bundle);
-        this.textViewMessage.setText(bundle.getString("textViewMessage"));
     }
 
 }
