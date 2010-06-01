@@ -32,6 +32,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
 
     public GpsTracker() {
         this.location_enalbed = false;
+        this.log_enabled = true;
     }
 
     @Override
@@ -39,7 +40,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         this.log = new GpsLog(this);
-        logOverlay = new LogOverlay(log);
+        this.logOverlay = new LogOverlay(log);
         
         this.textViewMessage = (TextView) findViewById(R.id.textViewMessage);
         lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -47,6 +48,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
         myOverlay = new MyLocationOverlay(getApplicationContext(), map);
         myOverlay.onProviderEnabled(LocationManager.GPS_PROVIDER);
         map.getOverlays().add(myOverlay);
+        map.getOverlays().add(logOverlay);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
         menu.add(0, MenuId.LAST_LOCATION, 0, "Last Location");
         menu.add(0, MenuId.SET_ZOOM, 0, "Zoom");
         menu.add(0, MenuId.SATELLITE_TOGGLE, 0, "Satellite/Map");
-        menu.add(0, MenuId.LOG_TOGGLE, 0, "Show Logs");
+        menu.add(0, MenuId.LOG_TOGGLE, 0, "Hide Logs");
         return supRetVal;
     }
 
@@ -95,7 +97,6 @@ public class GpsTracker extends MapActivity implements LocationListener {
         case MenuId.SET_ZOOM:
             MapController mc = map.getController();
             mc.setZoom(this.zoom_default);
-            map.getOverlays().add(logOverlay);
             break;
         case MenuId.SATELLITE_TOGGLE:
             if (map.isSatellite()) {
