@@ -35,6 +35,10 @@ public class GpsLog {
         // ファイルにも保存する
     }
     
+    public void add(double lat, double lon){
+        this.add(new GeoPoint((int) (lat * 1E6), (int) (lon * 1E6)));
+    }
+    
     
     
 }

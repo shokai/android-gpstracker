@@ -125,7 +125,6 @@ public class GpsTracker extends MapActivity implements LocationListener {
     public void setPosition(double lat, double lon, int zoom) {
         MapController mc = map.getController();
         GeoPoint p = new GeoPoint((int) (lat * 1E6), (int) (lon * 1E6));
-        log.add(p);
         mc.setCenter(p);
         mc.setZoom(zoom);
         this.myOverlay.getMyLocation();
@@ -146,6 +145,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
         double lon = location.getLongitude();
         message("lat:" + Double.toString(lat) + ", lon:" + Double.toString(lon));
         this.setPosition(lat, lon);
+        log.add(lat, lon);
     }
 
     public void onProviderDisabled(String provider) {
