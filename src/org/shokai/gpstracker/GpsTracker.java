@@ -2,6 +2,8 @@ package org.shokai.gpstracker;
 
 import android.os.Bundle;
 import com.google.android.maps.*;
+
+import android.app.*;
 import android.content.Context;
 import android.location.*;
 import android.util.Log;
@@ -79,13 +81,16 @@ public class GpsTracker extends MapActivity implements LocationListener {
             }
             break;
         case MenuId.LAST_LOCATION:
-            Location loc = lm
-                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            double lat = loc.getLatitude();
-            double lon = loc.getLongitude();
-            message("last lat:" + Double.toString(lat) + ", lon:"
-                    + Double.toString(lon));
-            this.setPosition(lat, lon, this.zoom_default);
+            Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(loc == null){
+                new AlertDialog.Builder(this).setMessage("Please Start GPS").setPositiveButton("OK", null).show();
+            }
+            else{
+                double lat = loc.getLatitude();
+                double lon = loc.getLongitude();
+                message("last lat:" + Double.toString(lat) + ", lon:" + Double.toString(lon));
+                this.setPosition(lat, lon, this.zoom_default);
+            }
             break;
         case MenuId.SET_ZOOM:
             MapController mc = map.getController();
