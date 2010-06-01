@@ -66,6 +66,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case MenuId.START_GPS:
+            trace("Menu - Start GPS");
             if (!this.location_enalbed) {
                 lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this); // 5(sec), 10(meter)
                 myOverlay.enableMyLocation();
@@ -83,6 +84,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
             }
             break;
         case MenuId.LAST_LOCATION:
+            trace("Menu - Last Location");
             Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if(loc == null){
                 new AlertDialog.Builder(this).setMessage("Please Start GPS").setPositiveButton("OK", null).show();
@@ -95,10 +97,12 @@ public class GpsTracker extends MapActivity implements LocationListener {
             }
             break;
         case MenuId.SET_ZOOM:
+            trace("Menu - Set Zoom");
             MapController mc = map.getController();
             mc.setZoom(this.zoom_default);
             break;
         case MenuId.SATELLITE_TOGGLE:
+            trace("Menu - Satellite Toggle");
             if (map.isSatellite()) {
                 map.setSatellite(false);
             } else {
@@ -106,6 +110,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
             }
             break;
         case MenuId.LOG_TOGGLE:
+            trace("Menu - Log Toggle : " + !log_enabled);
             if (this.log_enabled != true) {
                 map.getOverlays().add(logOverlay);
                 item.setTitle("Hide Logs");
@@ -136,8 +141,12 @@ public class GpsTracker extends MapActivity implements LocationListener {
     }
 
     public void message(String mes) {
-        Log.v("message", mes);
+        trace("message - " + mes);
         this.textViewMessage.setText(mes);
+    }
+
+    public void trace(String message){
+        Log.v("GpsTracker", message);
     }
 
     public void onLocationChanged(Location location) {
@@ -161,5 +170,5 @@ public class GpsTracker extends MapActivity implements LocationListener {
     protected boolean isRouteDisplayed() {
         return false;
     }
-
+    
 }
