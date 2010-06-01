@@ -4,6 +4,7 @@ import android.os.Bundle;
 import com.google.android.maps.*;
 import android.content.Context;
 import android.location.*;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import java.util.*;
@@ -17,6 +18,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
     private final int zoom_default = 18;
     private boolean location_enalbed, log_enabled; // GPSとコンパスを動かしているかどうか、logを表示しているかどうか
     private LogOverlay logOverlay;
+    private GpsLog log;
 
     private static class MenuId {
         private static final int START_GPS = 1;
@@ -34,13 +36,15 @@ public class GpsTracker extends MapActivity implements LocationListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        this.log = new GpsLog(this);
+        logOverlay = new LogOverlay(log);
+        
         this.textViewMessage = (TextView) findViewById(R.id.textViewMessage);
         lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         map = (MapView) findViewById(R.id.mapview);
         myOverlay = new MyLocationOverlay(getApplicationContext(), map);
         myOverlay.onProviderEnabled(LocationManager.GPS_PROVIDER);
         map.getOverlays().add(myOverlay);
-        logOverlay = new LogOverlay();
     }
 
     @Override
@@ -59,8 +63,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
         switch (item.getItemId()) {
         case MenuId.START_GPS:
             if (!this.location_enalbed) {
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000,
-                        10, this); // 5(sec), 10(meter)
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this); // 5(sec), 10(meter)
                 myOverlay.enableMyLocation();
                 myOverlay.enableCompass();
                 message("Start GPS");
@@ -100,7 +103,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
             if (this.log_enabled != true) {
                 map.getOverlays().add(logOverlay);
                 item.setTitle("Hide Logs");
-                message("logs: " + Integer.toString(logOverlay.size()));
+                message("logs: " + Integer.toString(log.size()));
                 log_enabled = true;
             } else {
                 map.getOverlays().remove(logOverlay);
@@ -116,7 +119,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
     public void setPosition(double lat, double lon, int zoom) {
         MapController mc = map.getController();
         GeoPoint p = new GeoPoint((int) (lat * 1E6), (int) (lon * 1E6));
-        logOverlay.add(p);
+        log.add(p);
         mc.setCenter(p);
         mc.setZoom(zoom);
         this.myOverlay.getMyLocation();
@@ -128,6 +131,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
     }
 
     public void message(String mes) {
+        Log.v("message", mes);
         this.textViewMessage.setText(mes);
     }
 
