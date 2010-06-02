@@ -43,6 +43,10 @@ public class GpsLog {
         return this.points.size();
     }
     
+    public GeoPoint getPoint(int index){
+        return this.points.get(index);
+    }
+    
     public void add(double lat, double lon){
         this.points.add(new GeoPoint((int) (lat * 1E6), (int) (lon * 1E6)));
         context.trace("add points : " + points.size());

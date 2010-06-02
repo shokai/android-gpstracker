@@ -135,9 +135,13 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
 
     public void onClick(DialogInterface dialog, int which) {
         try{
-        String name = log.fileNames()[which];
-        log.loadLog(name);
-        this.message("load : " + name + " - " + log.size() + "logs");
+            String name = log.fileNames()[which];
+            log.loadLog(name);
+            this.message("load : " + name + " - " + log.size() + "logs");
+            GeoPoint p = log.getPoint(log.size()-1);
+            double lat = ((double)p.getLatitudeE6()) / 1E6;
+            double lon = ((double)p.getLongitudeE6()) / 1E6;
+            this.setPosition(lat, lon);
         }
         catch(Exception e){
             Log.e("GpsTracker", e.getMessage());
@@ -170,8 +174,8 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
         double lat = location.getLatitude();
         double lon = location.getLongitude();
         message("lat:" + Double.toString(lat) + ", lon:" + Double.toString(lon));
-        this.setPosition(lat, lon);
         log.add(lat, lon);
+        this.setPosition(lat, lon);
     }
 
     public void onProviderDisabled(String provider) {
