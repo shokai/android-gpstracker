@@ -5,13 +5,13 @@ import com.google.android.maps.*;
 
 import android.app.*;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.location.*;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import java.util.*;
 
-public class GpsTracker extends MapActivity implements LocationListener {
+public class GpsTracker extends MapActivity implements LocationListener, DialogInterface.OnClickListener {
 
     private MapView map;
     private TextView textViewMessage;
@@ -127,10 +127,21 @@ public class GpsTracker extends MapActivity implements LocationListener {
             break;
         case MenuId.SELECT_LOGFILE:
             trace("Menu - Select Log");
-            new AlertDialog.Builder(this).setTitle("select").setItems(log.fileNames(), log).show();
+            new AlertDialog.Builder(this).setTitle("select").setItems(log.fileNames(), this).show();
             break;
         }
         return true;
+    }
+
+    public void onClick(DialogInterface dialog, int which) {
+        try{
+        String name = log.fileNames()[which];
+        log.loadLog(name);
+        this.message("load : " + name + " - " + log.size() + "logs");
+        }
+        catch(Exception e){
+            Log.e("GpsTracker", e.getMessage());
+        }
     }
 
     public void setPosition(double lat, double lon, int zoom) {

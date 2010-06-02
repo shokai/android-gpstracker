@@ -3,15 +3,13 @@ package org.shokai.gpstracker;
 import java.util.*;
 import java.io.*;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Environment;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 
 
-public class GpsLog implements DialogInterface.OnClickListener{
+public class GpsLog {
     
     private List<GeoPoint> points;
     private GpsTracker context;
@@ -94,6 +92,16 @@ public class GpsLog implements DialogInterface.OnClickListener{
         }
     }
     
+    public boolean loadLog(String fileName) throws Exception{
+        try{
+            File f = new File(this.dataDir, fileName);
+            return this.loadLog(f);
+        }
+        catch(Exception e){
+            throw e;
+        }
+    }
+    
     public boolean loadLog(int year, int month, int day) throws Exception{
         File f = new File(this.dataDir, year+"-"+month+"-"+day+".txt");
         try{
@@ -140,16 +148,6 @@ public class GpsLog implements DialogInterface.OnClickListener{
     
     public String[] fileNames(){
         return this.dataDir.list();
-    }
-    
-    public void onClick(DialogInterface dialog, int which) {
-        try{
-        String name = this.fileNames()[which];
-        this.loadLog(new File(this.dataDir, name));
-        }
-        catch(Exception e){
-            Log.e("GpsTracker", e.getMessage());
-        }
     }
     
 }
