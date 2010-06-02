@@ -4,13 +4,14 @@ import java.util.*;
 import java.io.*;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Environment;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 
 
-public class GpsLog {
+public class GpsLog implements DialogInterface.OnClickListener{
     
     private List<GeoPoint> points;
     private GpsTracker context;
@@ -32,7 +33,7 @@ public class GpsLog {
             this.loadLog(); 
         }
         catch(Exception e){
-            Log.e("GpsTracker", "log load error");
+            Log.e("GpsTracker", e.getMessage());
         }
     }
     
@@ -51,7 +52,7 @@ public class GpsLog {
             saveLog(lat, lon);
         }
         catch(Exception e){
-            Log.e("GpsTracker", e.toString());
+            Log.e("GpsTracker", e.getMessage());
         }
     }
     
@@ -130,6 +131,24 @@ public class GpsLog {
         }
         catch(Exception e){
             throw e;
+        }
+    }
+
+    public File getDataDir(){
+        return this.dataDir;
+    }
+    
+    public String[] fileNames(){
+        return this.dataDir.list();
+    }
+    
+    public void onClick(DialogInterface dialog, int which) {
+        try{
+        String name = this.fileNames()[which];
+        this.loadLog(new File(this.dataDir, name));
+        }
+        catch(Exception e){
+            Log.e("GpsTracker", e.getMessage());
         }
     }
     

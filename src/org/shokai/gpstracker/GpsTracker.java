@@ -28,6 +28,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
         private static final int SET_ZOOM = 3;
         private static final int SATELLITE_TOGGLE = 4;
         private static final int LOG_TOGGLE = 5;
+        private static final int SELECT_LOGFILE = 6;
     }
 
     public GpsTracker() {
@@ -58,7 +59,8 @@ public class GpsTracker extends MapActivity implements LocationListener {
         menu.add(0, MenuId.LAST_LOCATION, 0, "Last Location");
         menu.add(0, MenuId.SET_ZOOM, 0, "Zoom");
         menu.add(0, MenuId.SATELLITE_TOGGLE, 0, "Satellite/Map");
-        menu.add(0, MenuId.LOG_TOGGLE, 0, "Hide Logs");
+        menu.add(0, MenuId.LOG_TOGGLE, 0, "Hide Log");
+        menu.add(0, MenuId.SELECT_LOGFILE, 0, "Select Log");
         return supRetVal;
     }
 
@@ -113,15 +115,19 @@ public class GpsTracker extends MapActivity implements LocationListener {
             trace("Menu - Log Toggle : " + !log_enabled);
             if (this.log_enabled != true) {
                 map.getOverlays().add(logOverlay);
-                item.setTitle("Hide Logs");
+                item.setTitle("Hide Log");
                 message("logs: " + Integer.toString(log.size()));
                 log_enabled = true;
             } else {
                 map.getOverlays().remove(logOverlay);
-                item.setTitle("Show Logs");
+                item.setTitle("Show Log");
                 log_enabled = false;
             }
             map.invalidate(); // すぐ再描画
+            break;
+        case MenuId.SELECT_LOGFILE:
+            trace("Menu - Select Log");
+            new AlertDialog.Builder(this).setTitle("select").setItems(log.fileNames(), log).show();
             break;
         }
         return true;
