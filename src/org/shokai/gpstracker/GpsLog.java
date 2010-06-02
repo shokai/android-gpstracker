@@ -84,7 +84,7 @@ public class GpsLog {
         context.trace("saveLog : " + f.getPath());
     }
     
-    private boolean loadLog() throws Exception{
+    public boolean loadLog() throws Exception{
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH) + 1;
@@ -97,8 +97,17 @@ public class GpsLog {
         }
     }
     
-    private boolean loadLog(int year, int month, int day) throws Exception{
+    public boolean loadLog(int year, int month, int day) throws Exception{
         File f = new File(this.dataDir, year+"-"+month+"-"+day+".txt");
+        try{
+            return this.loadLog(f);
+        }
+        catch(Exception e){
+            throw e;
+        }
+    }
+    
+    public boolean loadLog(File f) throws Exception{
         if(!f.exists()) return false;
         context.trace("load Log - " + f.getPath());
         try{
