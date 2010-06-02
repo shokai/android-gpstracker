@@ -36,10 +36,6 @@ public class GpsLog {
         }
     }
     
-    public List<GeoPoint> load(int year, int month, int day){
-        return new ArrayList<GeoPoint>();
-    }
-    
     public List<GeoPoint> getPoints(){
         return this.points;
     }
