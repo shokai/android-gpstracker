@@ -68,7 +68,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
         case MenuId.START_GPS:
             trace("Menu - Start GPS");
             if (!this.location_enalbed) {
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this); // 5(sec), 10(meter)
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000, 10, this); // 20(sec), 10(meter)
                 myOverlay.enableMyLocation();
                 myOverlay.enableCompass();
                 message("Start GPS");

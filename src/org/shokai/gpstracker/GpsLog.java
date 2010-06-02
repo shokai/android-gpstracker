@@ -70,9 +70,9 @@ public class GpsLog {
         int sec = cal.get(Calendar.SECOND);
         File f = new File(this.dataDir, year+"-"+month+"-"+day+".txt");
         String str = new String(lat+", " +
-                lon+", " +
-                hour+"-"+min+"-"+sec +
-                "\n");
+                                lon+", " +
+                                hour+":"+min+":"+sec +
+                                "\n");
         try{
             OutputStream os = new FileOutputStream(f, true); // append mode
             os.write(str.getBytes());
