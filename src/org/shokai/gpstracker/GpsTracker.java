@@ -156,7 +156,7 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
     public void setPosition(double lat, double lon, int zoom) {
         MapController mc = map.getController();
         GeoPoint p = new GeoPoint((int) (lat * 1E6), (int) (lon * 1E6));
-        mc.setCenter(p);
+        mc.animateTo(p);
         mc.setZoom(zoom);
         this.myOverlay.getMyLocation();
     }
