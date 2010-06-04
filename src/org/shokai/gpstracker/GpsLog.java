@@ -66,7 +66,7 @@ public class GpsLog {
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int min = cal.get(Calendar.MINUTE);
         int sec = cal.get(Calendar.SECOND);
-        File f = new File(this.dataDir, year+"-"+month+"-"+day+".txt");
+        File f = new File(this.dataDir, year+"-"+month+"-"+day);
         String str = new String(lat+", " +
                                 lon+", " +
                                 hour+":"+min+":"+sec +
@@ -106,7 +106,7 @@ public class GpsLog {
     }
     
     public boolean loadLog(int year, int month, int day) throws Exception{
-        File f = new File(this.dataDir, year+"-"+month+"-"+day+".txt");
+        File f = new File(this.dataDir, year+"-"+month+"-"+day);
         try{
             return this.loadLog(f);
         }
@@ -150,7 +150,12 @@ public class GpsLog {
     }
     
     public String[] fileNames(){
-        return this.dataDir.list();
+        String[] files = this.dataDir.list();
+        String[] reverses = new String[files.length];
+        for(int i = 0; i < files.length; i++){
+            reverses[i] = files[files.length-1-i];
+        }
+        return reverses;
     }
     
 }
