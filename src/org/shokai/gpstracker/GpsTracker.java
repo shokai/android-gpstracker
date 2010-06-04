@@ -42,6 +42,7 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
         setContentView(R.layout.main);
         this.log = new GpsLog(this);
         this.logOverlay = new LogOverlay(log);
+        this.logOverlay.setMaxLines(1000);
         
         this.textViewMessage = (TextView) findViewById(R.id.textViewMessage);
         lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
