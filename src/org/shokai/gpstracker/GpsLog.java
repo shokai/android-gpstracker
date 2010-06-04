@@ -5,7 +5,6 @@ import java.io.*;
 import android.app.AlertDialog;
 import android.os.Environment;
 import android.util.Log;
-
 import com.google.android.maps.GeoPoint;
 
 
