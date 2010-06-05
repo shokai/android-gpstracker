@@ -150,12 +150,19 @@ public class GpsLog {
     }
     
     public String[] fileNames(){
-        String[] files = this.dataDir.list();
-        String[] reverses = new String[files.length];
-        for(int i = 0; i < files.length; i++){
-            reverses[i] = files[files.length-1-i];
+        ArrayList<String> files = new ArrayList<String>();
+        for(String file : this.dataDir.list()){
+            files.add(file);
         }
-        return reverses;
+        Collections.sort(files);
+        Collections.reverse(files);
+        
+        String[] result = new String[files.size()];
+        for(int i = 0; i < files.size(); i++){
+            result[i] = files.get(i);
+        }
+        
+        return result;
     }
     
 }

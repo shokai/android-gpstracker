@@ -153,7 +153,7 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
         case MenuId.SELECT_LOGFILE:
             trace("Menu - Select Log");
             if(log.fileNames().length < 1){
-                new AlertDialog.Builder(this).setMessage("No Logs ").setPositiveButton("OK", null).show();
+                new AlertDialog.Builder(this).setMessage("No Logs").setPositiveButton("OK", null).show();
             }
             else{
                 new AlertDialog.Builder(this).setTitle("Select Log").setItems(log.fileNames(), this).show();
