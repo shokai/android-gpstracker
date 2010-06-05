@@ -21,6 +21,7 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
     private boolean location_enalbed, log_enabled; // GPSとコンパスを動かしているかどうか、logを表示しているかどうか
     private LogOverlay logOverlay;
     private GpsLog log;
+    private boolean paused;
 
     private static class MenuId {
         private static final int START_GPS = 1;
@@ -34,6 +35,29 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
     public GpsTracker() {
         this.location_enalbed = false;
         this.log_enabled = true;
+        this.paused = false;
+    }
+    
+    @Override
+    public void onPause(){
+        super.onPause();
+        trace("onPause");
+        this.paused = true;
+        if(this.location_enalbed && this.myOverlay != null){
+            myOverlay.disableCompass();
+            myOverlay.disableMyLocation();
+        }
+    }
+    
+    @Override
+    public void onResume(){
+        super.onResume();
+        trace("onResume");
+        this.paused = false;
+        if(this.location_enalbed && this.myOverlay != null){
+            myOverlay.enableCompass();
+            myOverlay.enableMyLocation();
+        }
     }
 
     @Override
@@ -179,9 +203,11 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
     public void onLocationChanged(Location location) {
         double lat = location.getLatitude();
         double lon = location.getLongitude();
-        message("lat:" + Double.toString(lat) + ", lon:" + Double.toString(lon));
         log.add(lat, lon);
-        this.setPosition(lat, lon);
+        if(!paused){
+            message("lat:" + Double.toString(lat) + ", lon:" + Double.toString(lon));
+            this.setPosition(lat, lon);
+        }
     }
 
     public void onProviderDisabled(String provider) {
