@@ -84,7 +84,7 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
         menu.add(0, MenuId.LAST_LOCATION, 0, "Last Location").setIcon(android.R.drawable.ic_menu_revert);
         menu.add(0, MenuId.SET_ZOOM, 0, "Zoom").setIcon(android.R.drawable.ic_menu_zoom);
         menu.add(0, MenuId.SATELLITE_TOGGLE, 0, "Satellite/Map").setIcon(android.R.drawable.ic_menu_mapmode);
-        menu.add(0, MenuId.LOG_TOGGLE, 0, "Hide Log").setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+        menu.add(0, MenuId.LOG_TOGGLE, 0, "Hide Log").setIcon(android.R.drawable.ic_menu_view);
         menu.add(0, MenuId.SELECT_LOGFILE, 0, "Select Log").setIcon(android.R.drawable.ic_menu_recent_history);
         return supRetVal;
     }
@@ -140,12 +140,12 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
             trace("Menu - Log Toggle : " + !log_enabled);
             if (this.log_enabled != true) {
                 map.getOverlays().add(logOverlay);
-                item.setTitle("Hide Log").setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+                item.setTitle("Hide Log");
                 message("logs: " + Integer.toString(log.size()));
                 log_enabled = true;
             } else {
                 map.getOverlays().remove(logOverlay);
-                item.setTitle("Show Log").setIcon(android.R.drawable.ic_menu_view);
+                item.setTitle("Show Log");
                 log_enabled = false;
             }
             map.invalidate(); // すぐ再描画
