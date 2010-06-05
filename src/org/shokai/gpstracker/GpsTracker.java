@@ -80,12 +80,12 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean supRetVal = super.onCreateOptionsMenu(menu);
-        menu.add(0, MenuId.START_GPS, 0, "Start GPS");
-        menu.add(0, MenuId.LAST_LOCATION, 0, "Last Location");
-        menu.add(0, MenuId.SET_ZOOM, 0, "Zoom");
-        menu.add(0, MenuId.SATELLITE_TOGGLE, 0, "Satellite/Map");
-        menu.add(0, MenuId.LOG_TOGGLE, 0, "Hide Log");
-        menu.add(0, MenuId.SELECT_LOGFILE, 0, "Select Log");
+        menu.add(0, MenuId.START_GPS, 0, "Start GPS").setIcon(android.R.drawable.ic_menu_mylocation);
+        menu.add(0, MenuId.LAST_LOCATION, 0, "Last Location").setIcon(android.R.drawable.ic_menu_revert);
+        menu.add(0, MenuId.SET_ZOOM, 0, "Zoom").setIcon(android.R.drawable.ic_menu_zoom);
+        menu.add(0, MenuId.SATELLITE_TOGGLE, 0, "Satellite/Map").setIcon(android.R.drawable.ic_menu_mapmode);
+        menu.add(0, MenuId.LOG_TOGGLE, 0, "Hide Log").setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+        menu.add(0, MenuId.SELECT_LOGFILE, 0, "Select Log").setIcon(android.R.drawable.ic_menu_recent_history);
         return supRetVal;
     }
 
@@ -140,12 +140,12 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
             trace("Menu - Log Toggle : " + !log_enabled);
             if (this.log_enabled != true) {
                 map.getOverlays().add(logOverlay);
-                item.setTitle("Hide Log");
+                item.setTitle("Hide Log").setIcon(android.R.drawable.ic_menu_close_clear_cancel);
                 message("logs: " + Integer.toString(log.size()));
                 log_enabled = true;
             } else {
                 map.getOverlays().remove(logOverlay);
-                item.setTitle("Show Log");
+                item.setTitle("Show Log").setIcon(android.R.drawable.ic_menu_view);
                 log_enabled = false;
             }
             map.invalidate(); // すぐ再描画
