@@ -1,6 +1,7 @@
 package org.shokai.gpstracker;
 
 import java.util.*;
+import java.util.regex.*;
 import java.io.*;
 import android.app.AlertDialog;
 import android.os.Environment;
@@ -154,7 +155,8 @@ public class GpsLog {
         for(String file : this.dataDir.list()){
             files.add(file);
         }
-        Collections.sort(files);
+        
+        Collections.sort(files, new FileNamesComparator());
         Collections.reverse(files);
         
         String[] result = new String[files.size()];
@@ -165,4 +167,33 @@ public class GpsLog {
         return result;
     }
     
+    public class FileNamesComparator implements Comparator {
+        Pattern pattern_ymd;
+
+        public FileNamesComparator() {
+            this.pattern_ymd = Pattern.compile("^([1-9][0-9]*)-([1-9][0-9]*)-([1-9][0-9]*)$");
+        }
+
+        public int compare(Object obj_a, Object obj_b) {
+            if (!pattern_ymd.matcher(obj_a.toString()).matches()) return 1;
+            else if (!pattern_ymd.matcher(obj_b.toString()).matches()) return -1;
+            String[] tmp_a = obj_a.toString().split("-");
+            String[] tmp_b = obj_b.toString().split("-");
+            int[] a = new int[3];
+            int[] b = new int[3];
+            for (int i = 0; i < 3; i++) {
+                a[i] = Integer.parseInt(tmp_a[i]);
+                b[i] = Integer.parseInt(tmp_b[i]);
+            }
+            if (a[0] > b[0]) return 1;
+            if (a[0] < b[0]) return -1;
+            if (a[1] > b[1]) return 1;
+            if (a[1] < b[1]) return -1;
+            if (a[2] > b[2]) return 1;
+            if (a[2] < b[2]) return -1;
+            return 0;
+        }
+    }
+    
 }
+
