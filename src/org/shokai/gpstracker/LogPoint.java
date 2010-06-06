@@ -41,7 +41,8 @@ public class LogPoint extends GeoPoint {
         double lon = ((double)this.getLongitudeE6())/1E6;
         String str = new String(lat+", " +
                                 lon+", " +
-                                hour+":"+min+":"+sec +
+                                hour+":"+min+":"+sec +", "+
+                                r+":"+g+":"+b +
                                 "\n");
         return str;
     }
@@ -59,6 +60,12 @@ public class LogPoint extends GeoPoint {
                 p.setHour(Integer.parseInt(time[0]));
                 p.setMin(Integer.parseInt(time[1]));
                 p.setSec(Integer.parseInt(time[2]));
+            }
+            if(items.length > 3 ){ // 色
+                String[] color = items[3].split(":");
+                p.setR(Integer.parseInt(color[0]));
+                p.setG(Integer.parseInt(color[1]));
+                p.setB(Integer.parseInt(color[2]));
             }
             return p;
         }
