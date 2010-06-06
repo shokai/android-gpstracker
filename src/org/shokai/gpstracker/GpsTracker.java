@@ -10,6 +10,7 @@ import android.location.*;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import java.util.regex.*;
 
 public class GpsTracker extends MapActivity implements LocationListener, DialogInterface.OnClickListener {
 
@@ -201,6 +202,7 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
 
     public void message(String mes) {
         trace("message - " + mes);
+        mes = Pattern.compile("(\\d+\\.\\d{8})\\d+").matcher(mes).replaceAll("$1"); // 桁数制限
         this.textViewMessage.setText(mes);
     }
 
