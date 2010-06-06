@@ -47,33 +47,24 @@ public class GpsLog {
     }
     
     public void add(double lat, double lon){
-        this.points.add(new LogPoint((int) (lat * 1E6), (int) (lon * 1E6)));
+        LogPoint p = new LogPoint((int) (lat * 1E6), (int) (lon * 1E6));
+        this.points.add(p);
         context.trace("add points : " + points.size());
         try{
-            saveLog(lat, lon);
+            saveLog(p);
         }
         catch(Exception e){
             Log.e("GpsTracker", e.getMessage());
         }
     }
     
-    private void saveLog(double lat, double lon) throws Exception{
+    private void saveLog(LogPoint p) throws Exception{
         if (dataDir == null) return;
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        int min = cal.get(Calendar.MINUTE);
-        int sec = cal.get(Calendar.SECOND);
-        File f = new File(this.dataDir, year+"-"+month+"-"+day);
-        String str = new String(lat+", " +
-                                lon+", " +
-                                hour+":"+min+":"+sec +
-                                "\n");
+        File f = new File(this.dataDir, p.getYear()+"-"+p.getMonth()+"-"+p.getDay());
+
         try{
             OutputStream os = new FileOutputStream(f, true); // append mode
-            os.write(str.getBytes());
+            os.write(p.toLog().getBytes());
             os.close();
         }
         catch(Exception e){
