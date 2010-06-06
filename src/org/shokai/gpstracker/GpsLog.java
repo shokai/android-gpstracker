@@ -6,18 +6,17 @@ import java.io.*;
 import android.app.AlertDialog;
 import android.os.Environment;
 import android.util.Log;
-import com.google.android.maps.GeoPoint;
 
 
 public class GpsLog {
     
-    private List<GeoPoint> points;
+    private List<LogPoint> points;
     private GpsTracker context;
     private File dataDir;
     
     public GpsLog(GpsTracker context){
         this.context = context;
-        this.points = new ArrayList<GeoPoint>();
+        this.points = new ArrayList<LogPoint>();
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             dataDir = new File(Environment.getExternalStorageDirectory(), context.getPackageName()+"/log");
             dataDir.mkdirs();
@@ -35,7 +34,7 @@ public class GpsLog {
         }
     }
     
-    public List<GeoPoint> getPoints(){
+    public List<LogPoint> getPoints(){
         return this.points;
     }
     
@@ -43,12 +42,12 @@ public class GpsLog {
         return this.points.size();
     }
     
-    public GeoPoint getPoint(int index){
+    public LogPoint getPoint(int index){
         return this.points.get(index);
     }
     
     public void add(double lat, double lon){
-        this.points.add(new GeoPoint((int) (lat * 1E6), (int) (lon * 1E6)));
+        this.points.add(new LogPoint((int) (lat * 1E6), (int) (lon * 1E6)));
         context.trace("add points : " + points.size());
         try{
             saveLog(lat, lon);
@@ -125,14 +124,14 @@ public class GpsLog {
             is.read(bytes);
             is.close();
             String[] lines = new String(bytes).split("\n");
-            List<GeoPoint> points = new ArrayList<GeoPoint>();
+            List<LogPoint> points = new ArrayList<LogPoint>();
             for(String line : lines){
                 String[] items = line.split("[    ]*,[    ]*");
                 if(items.length > 1){
                     double lat = Double.parseDouble(items[0]);
                     double lon = Double.parseDouble(items[1]);
                     context.trace("load Log - "+lat + ", " + lon);
-                    points.add( new GeoPoint((int) (lat * 1E6), (int) (lon * 1E6)) );
+                    points.add( new LogPoint((int) (lat * 1E6), (int) (lon * 1E6)) );
                 }
             }
             if (points.size() > 0){

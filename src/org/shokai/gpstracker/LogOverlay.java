@@ -2,26 +2,16 @@ package org.shokai.gpstracker;
 
 import java.util.*;
 import android.graphics.*;
-import android.graphics.Paint.*;
 import android.util.Log;
 import com.google.android.maps.*;
 
 public class LogOverlay extends Overlay {
 
-    private Paint linePaint;
     private GpsLog log;
     private int maxLines = 1000;
     
     public LogOverlay(GpsLog log) {
         this.log = log;
-        this.linePaint = new Paint();
-        linePaint.setARGB(255, 255, 0, 0);
-        linePaint.setStrokeWidth(2);
-        linePaint.setDither(true);
-        linePaint.setStyle(Style.FILL);
-        linePaint.setAntiAlias(true);
-        linePaint.setStrokeJoin(Paint.Join.ROUND);
-        linePaint.setStrokeCap(Paint.Cap.ROUND);
     }
     
     public void setMaxLines(int num){
@@ -31,7 +21,7 @@ public class LogOverlay extends Overlay {
 
     @Override
     public void draw(Canvas canvas, MapView view, boolean shadow) {
-        List<GeoPoint> points = log.getPoints();
+        List<LogPoint> points = log.getPoints();
         int size = points.size();
         if (size < 2) return;
 
@@ -69,21 +59,26 @@ public class LogOverlay extends Overlay {
 
         Point pa = new Point();
         Point pb = new Point();
+        LogPoint la, lb;
         int count = 0;
         int visible_ratio = visibles_num / this.maxLines + 1;
         if(visible_ratio > 1) Log.v("GpsTracker", "visibles : " + visibles_num + ", max : " + this.maxLines);
         for (int i = 0; i < size - 1; i++) {
             if(visibles[i] && visibles[i+1]){
                 if(count++ % visible_ratio == 0){ // 線が増えすぎないように間引く
-                    view.getProjection().toPixels(points.get(i), pa);
-                    view.getProjection().toPixels(points.get(i + 1), pb);
-                    canvas.drawLine(pa.x, pa.y, pb.x, pb.y, linePaint);
+                    la = points.get(i);
+                    lb = points.get(i+1);
+                    view.getProjection().toPixels(la, pa);
+                    view.getProjection().toPixels(lb, pb);
+                    canvas.drawLine(pa.x, pa.y, pb.x, pb.y, la.getPaint());
                 }
             }
             if((visibles[i] && borders[i+1]) || (borders[i] && visibles[i+1])){
-                view.getProjection().toPixels(points.get(i), pa);
-                view.getProjection().toPixels(points.get(i + 1), pb);
-                canvas.drawLine(pa.x, pa.y, pb.x, pb.y, linePaint);
+                la = points.get(i);
+                lb = points.get(i+1);
+                view.getProjection().toPixels(la, pa);
+                view.getProjection().toPixels(lb, pb);
+                canvas.drawLine(pa.x, pa.y, pb.x, pb.y, la.getPaint());
             }
         }
     }
