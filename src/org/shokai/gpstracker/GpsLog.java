@@ -117,13 +117,7 @@ public class GpsLog {
             String[] lines = new String(bytes).split("\n");
             List<LogPoint> points = new ArrayList<LogPoint>();
             for(String line : lines){
-                String[] items = line.split("[    ]*,[    ]*");
-                if(items.length > 1){
-                    double lat = Double.parseDouble(items[0]);
-                    double lon = Double.parseDouble(items[1]);
-                    context.trace("load Log - "+lat + ", " + lon);
-                    points.add( new LogPoint((int) (lat * 1E6), (int) (lon * 1E6)) );
-                }
+                points.add(LogPoint.parse(line));
             }
             if (points.size() > 0){
                 this.points = points;
