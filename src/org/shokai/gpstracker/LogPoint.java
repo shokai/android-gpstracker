@@ -11,11 +11,15 @@ public class LogPoint extends GeoPoint {
 
     private Paint paint;
     private int year, month, day, hour, min, sec;
+    private int r, g, b;
         
     public LogPoint(int latitudeE6, int longitudeE6) {
         super(latitudeE6, longitudeE6);
+        this.r = 255;
+        this.g = 0;
+        this.b = 0;
+        
         this.paint = new Paint();
-        this.paint.setARGB(255, 255, 0, 0);
         this.paint.setStrokeWidth(2);
         this.paint.setDither(true);
         this.paint.setStyle(Style.FILL);
@@ -49,7 +53,6 @@ public class LogPoint extends GeoPoint {
             LogPoint p;
             double lat = Double.parseDouble(items[0]);
             double lon = Double.parseDouble(items[1]);
-            Log.v("GpsTracker", "load - lat:"+lat+", lon:"+lon);
             p = new LogPoint((int) (lat * 1E6), (int) (lon * 1E6));
             if(items.length > 2){ // 時刻
                 String[] time = items[2].split(":");
@@ -62,6 +65,7 @@ public class LogPoint extends GeoPoint {
     }
     
     public Paint getPaint(){
+        this.paint.setARGB(255, r, g, b);
         return paint;
     }
 
@@ -111,6 +115,30 @@ public class LogPoint extends GeoPoint {
 
     public void setSec(int sec) {
         this.sec = sec;
+    }
+
+    public int getR() {
+        return r;
+    }
+
+    public void setR(int r) {
+        this.r = r;
+    }
+
+    public int getG() {
+        return g;
+    }
+
+    public void setG(int g) {
+        this.g = g;
+    }
+
+    public int getB() {
+        return b;
+    }
+
+    public void setB(int b) {
+        this.b = b;
     }
     
 

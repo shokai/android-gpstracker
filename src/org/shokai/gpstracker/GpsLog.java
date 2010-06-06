@@ -117,7 +117,9 @@ public class GpsLog {
             String[] lines = new String(bytes).split("\n");
             List<LogPoint> points = new ArrayList<LogPoint>();
             for(String line : lines){
-                points.add(LogPoint.parse(line));
+                LogPoint p = LogPoint.parse(line); 
+                points.add(p);
+                context.trace(p.toLog());
             }
             if (points.size() > 0){
                 this.points = points;
