@@ -13,9 +13,13 @@ public class GpsLog {
     private List<LogPoint> points;
     private GpsTracker context;
     private File dataDir;
+    private int r, g, b;
     
     public GpsLog(GpsTracker context){
         this.context = context;
+        this.r = 255;
+        this.g = 0;
+        this.b = 0;
         this.points = new ArrayList<LogPoint>();
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             dataDir = new File(Environment.getExternalStorageDirectory(), context.getPackageName()+"/log");
@@ -48,8 +52,11 @@ public class GpsLog {
     
     public void add(double lat, double lon){
         LogPoint p = new LogPoint((int) (lat * 1E6), (int) (lon * 1E6));
+        p.setR(r);
+        p.setG(g);
+        p.setB(b);
         this.points.add(p);
-        context.trace("add points : " + points.size());
+        context.trace("add points : " + p.toLog());
         try{
             saveLog(p);
         }
@@ -179,6 +186,30 @@ public class GpsLog {
             if (a[2] < b[2]) return -1;
             return 0;
         }
+    }
+
+    public int getR() {
+        return r;
+    }
+
+    public void setR(int r) {
+        this.r = r;
+    }
+
+    public int getG() {
+        return g;
+    }
+
+    public void setG(int g) {
+        this.g = g;
+    }
+
+    public int getB() {
+        return b;
+    }
+
+    public void setB(int b) {
+        this.b = b;
     }
     
 }

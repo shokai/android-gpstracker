@@ -87,7 +87,7 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
         menu.add(0, MenuId.SATELLITE_TOGGLE, 0, "Satellite/Map").setIcon(android.R.drawable.ic_menu_mapmode);
         menu.add(0, MenuId.LOG_TOGGLE, 0, "Hide Log").setIcon(android.R.drawable.ic_menu_view);
         menu.add(0, MenuId.SELECT_LOGFILE, 0, "Select Log").setIcon(android.R.drawable.ic_menu_recent_history);
-        menu.add(0, MenuId.SELECT_COLOR, 0, "Log Color").setIcon(android.R.drawable.ic_menu_edit);
+        menu.add(0, MenuId.SELECT_COLOR, 0, "Line Color").setIcon(android.R.drawable.ic_menu_edit);
         return supRetVal;
     }
 
@@ -160,6 +160,12 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
             else{
                 new AlertDialog.Builder(this).setTitle("Select Log").setItems(log.fileNames(), this).show();
             }
+            break;
+        case MenuId.SELECT_COLOR:
+            trace("Menu - Select Color");
+            new AlertDialog.Builder(this).setTitle("Select Log Color")
+                .setItems(ColorSelectDialogClickListener.colors, new ColorSelectDialogClickListener(log))
+                .show();
             break;
         }
         return true;
