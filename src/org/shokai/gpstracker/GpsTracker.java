@@ -115,16 +115,11 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
             break;
         case MenuId.LAST_LOCATION:
             trace("Menu - Last Location");
-            Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if(loc == null){
-                new AlertDialog.Builder(this).setMessage("Please Start GPS").setPositiveButton("OK", null).show();
-            }
-            else{
-                double lat = loc.getLatitude();
-                double lon = loc.getLongitude();
-                message("last lat:" + Double.toString(lat) + ", lon:" + Double.toString(lon));
-                this.setPosition(lat, lon, this.zoom_default);
-            }
+            LogPoint p = log.lastPoint();
+            double lat = p.getLatitudeE6()/1E6;
+            double lon = p.getLongitudeE6()/1E6;
+            message("last lat:" + Double.toString(lat) + ", lon:" + Double.toString(lon));
+            this.setPosition(lat, lon, this.zoom_default);
             break;
         case MenuId.SET_ZOOM:
             trace("Menu - Set Zoom");
