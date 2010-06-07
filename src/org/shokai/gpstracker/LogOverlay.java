@@ -46,6 +46,17 @@ public class LogOverlay extends Overlay {
             }
         }
         
+        // 画面外への線を描画するためのGeoPointをリストアップ
+        boolean[] borders = new boolean[size];
+        for (int i = 0; i < size; i++) {
+            if (!visibles[i]) {
+                if ((i > 0 && visibles[i - 1]) ||
+                (i < size - 1 && visibles[i + 1])) {
+                    borders[i] = true;
+                }
+            }
+        }
+        
         Point pa = new Point();
         Point pb = new Point();
         LogPoint la, lb;
@@ -61,6 +72,13 @@ public class LogOverlay extends Overlay {
                     view.getProjection().toPixels(lb, pb);
                     canvas.drawLine(pa.x, pa.y, pb.x, pb.y, la.getPaint());
                 }
+            }
+            else if ((visibles[i] && borders[i+1]) || (borders[i] && visibles[i+1])) {
+                    la = points.get(i);
+                    lb = points.get(i+1);
+                    view.getProjection().toPixels(la, pa);
+                    view.getProjection().toPixels(lb, pb);
+                    canvas.drawLine(pa.x, pa.y, pb.x, pb.y, la.getPaint());
             }
         }
     }
