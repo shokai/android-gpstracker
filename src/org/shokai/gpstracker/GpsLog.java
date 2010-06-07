@@ -65,6 +65,10 @@ public class GpsLog {
         }
     }
     
+    public LogPoint lastPoint(){
+        return this.points.get(this.points.size());
+    }
+    
     private void saveLog(LogPoint p) throws Exception{
         if (dataDir == null) return;
         File f = new File(this.dataDir, p.getYear()+"-"+p.getMonth()+"-"+p.getDay());
