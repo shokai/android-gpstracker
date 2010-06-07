@@ -66,7 +66,7 @@ public class GpsLog {
     }
     
     public LogPoint lastPoint(){
-        return this.points.get(this.points.size());
+        return this.points.get(this.points.size()-1);
     }
     
     private void saveLog(LogPoint p) throws Exception{
