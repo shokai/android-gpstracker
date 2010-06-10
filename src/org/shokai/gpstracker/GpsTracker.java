@@ -12,7 +12,7 @@ import android.view.*;
 import android.widget.*;
 import java.util.regex.*;
 
-public class GpsTracker extends MapActivity implements LocationListener, DialogInterface.OnClickListener {
+public class GpsTracker extends MapActivity implements LocationListener {
 
     private MapView map;
     private TextView textViewMessage;
@@ -159,7 +159,9 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
                 new AlertDialog.Builder(this).setMessage("No Logs").setPositiveButton("OK", null).show();
             }
             else{
-                new AlertDialog.Builder(this).setTitle("Select Log").setItems(log.fileNames(), this).show();
+                new AlertDialog.Builder(this).setTitle("Select Log")
+                    .setItems(log.fileNames(), new LoadLogFileSelectDialogClickListener(this, log))
+                    .show();
             }
             break;
         case MenuId.SELECT_COLOR:
@@ -170,21 +172,6 @@ public class GpsTracker extends MapActivity implements LocationListener, DialogI
             break;
         }
         return true;
-    }
-
-    public void onClick(DialogInterface dialog, int which) {
-        try{
-            String name = log.fileNames()[which];
-            log.loadLog(name);
-            this.message("load : " + name + " - " + log.size() + "logs");
-            GeoPoint p = log.getPoint(log.size()-1);
-            double lat = ((double)p.getLatitudeE6()) / 1E6;
-            double lon = ((double)p.getLongitudeE6()) / 1E6;
-            this.setPosition(lat, lon);
-        }
-        catch(Exception e){
-            Log.e("GpsTracker", e.getMessage());
-        }
     }
 
     public void setPosition(double lat, double lon, int zoom) {
