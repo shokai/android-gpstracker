@@ -20,10 +20,9 @@ public class GpsLog {
         this.r = 255;
         this.g = 0;
         this.b = 0;
-        this.points = new ArrayList<LogPoint>();
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            dataDir = new File(Environment.getExternalStorageDirectory(), context.getPackageName()+"/log");
-            dataDir.mkdirs();
+        this.points = new ArrayList<LogPoint>();                                                                                                                                                                                                   
+        if (this.hasSdCard()){    
+            this.dataDir = new File(this.getDir());
             context.trace("data dir : "+ dataDir.getPath());
         }
         else{
@@ -39,12 +38,10 @@ public class GpsLog {
     }
     
     public String getDir(){
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            dataDir = new File(Environment.getExternalStorageDirectory(), context.getPackageName()+"/log");
-            dataDir.mkdirs();
-            return dataDir.getPath();
-        }
-        else return "";
+        if (!this.hasSdCard()) return "";
+        dataDir = new File(Environment.getExternalStorageDirectory(), context.getPackageName()+"/log");
+        if(!dataDir.exists()) dataDir.mkdirs();
+        return dataDir.getPath();
     }
     
     public boolean hasSdCard(){
@@ -154,10 +151,6 @@ public class GpsLog {
         catch(Exception e){
             throw e;
         }
-    }
-
-    public File getDataDir(){
-        return this.dataDir;
     }
     
     public String[] fileNames(){
