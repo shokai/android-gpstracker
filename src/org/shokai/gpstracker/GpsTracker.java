@@ -32,6 +32,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
         private static final int LOG_TOGGLE = 5;
         private static final int SELECT_LOGFILE = 6;
         private static final int SELECT_COLOR = 7;
+        private static final int SEND_LOGFILE = 8;
     }
 
     public GpsTracker() {
@@ -89,6 +90,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
         menu.add(0, MenuId.LOG_TOGGLE, 0, "Hide Log").setIcon(android.R.drawable.ic_menu_view);
         menu.add(0, MenuId.SELECT_LOGFILE, 0, "Select Log").setIcon(android.R.drawable.ic_menu_recent_history);
         menu.add(0, MenuId.SELECT_COLOR, 0, "Line Color").setIcon(android.R.drawable.ic_menu_edit);
+        menu.add(0, MenuId.SEND_LOGFILE, 0, "Export Log");
         return supRetVal;
     }
 
@@ -168,6 +170,12 @@ public class GpsTracker extends MapActivity implements LocationListener {
             trace("Menu - Select Color");
             new AlertDialog.Builder(this).setTitle("Select Log Color")
                 .setItems(ColorSelectDialogClickListener.colors, new ColorSelectDialogClickListener(log))
+                .show();
+            break;
+        case MenuId.SEND_LOGFILE:
+            trace("Menu - Send Log File");
+            new AlertDialog.Builder(this).setTitle("Select Log")
+                .setItems(log.fileNames(), new SendLogFileSelectDialogClickListener(this, log))
                 .show();
             break;
         }

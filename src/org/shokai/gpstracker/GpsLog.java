@@ -38,6 +38,19 @@ public class GpsLog {
         }
     }
     
+    public String getDir(){
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            dataDir = new File(Environment.getExternalStorageDirectory(), context.getPackageName()+"/log");
+            dataDir.mkdirs();
+            return dataDir.getPath();
+        }
+        else return "";
+    }
+    
+    public boolean hasSdCard(){
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+    }
+    
     public List<LogPoint> getPoints(){
         return this.points;
     }
