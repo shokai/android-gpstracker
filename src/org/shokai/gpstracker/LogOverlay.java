@@ -65,8 +65,10 @@ public class LogOverlay extends Overlay {
         if(visible_ratio > 1) Log.v("GpsTracker", "visibles : " + visibles_num + ", max : " + this.maxLines);
         for (int i = 0; i < size - 1; i++) {
             if(visibles[i] && visibles[i+1]){
-                if(count++ % visible_ratio == 0){ // 線が増えすぎないように間引く
-                    la = points.get(i);
+                la = points.get(i);
+                if(count++ % visible_ratio != 0) i++; // 線が増えすぎないように間引く（次の点につなぐ）
+                if(i >= size-1) break;
+                if(visibles[i+1] || borders[i+1]){
                     lb = points.get(i+1);
                     view.getProjection().toPixels(la, pa);
                     view.getProjection().toPixels(lb, pb);
