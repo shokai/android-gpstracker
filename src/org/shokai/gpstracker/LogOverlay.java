@@ -8,7 +8,7 @@ import com.google.android.maps.*;
 public class LogOverlay extends Overlay {
 
     private GpsLog log;
-    private int maxLines = 1000;
+    private int maxLines = 500;
     
     public LogOverlay(GpsLog log) {
         this.log = log;

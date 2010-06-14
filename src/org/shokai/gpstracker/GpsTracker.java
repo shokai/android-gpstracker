@@ -69,7 +69,7 @@ public class GpsTracker extends MapActivity implements LocationListener {
         setContentView(R.layout.main);
         this.log = new GpsLog(this);
         this.logOverlay = new LogOverlay(log);
-        this.logOverlay.setMaxLines(1000);
+        this.logOverlay.setMaxLines(500);
         
         this.textViewMessage = (TextView) findViewById(R.id.textViewMessage);
         lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
