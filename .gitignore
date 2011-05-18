@@ -4,4 +4,4 @@
 db/*
 db*
 .fuse*
-*.tch
+bin
