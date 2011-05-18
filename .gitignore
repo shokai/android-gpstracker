@@ -5,3 +5,6 @@ db/*
 db*
 .fuse*
 bin
+build.xml
+local.properties
+proguard.cfg
