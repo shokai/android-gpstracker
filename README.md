@@ -6,14 +6,24 @@ Android App. Store GPS data and plot on Google Maps.
 Dependencies
 ------------
 
-* Android 2.1
+* Android 2.1+
 * GPS
-* SD Card
+* SD Card or External Storage
 
 Screen Shot
 -----------
 * [Nihonbashi, Tokyo](http://www.flickr.com/photos/shokai/4678255896/)
 * [Nihonbashi, Tokyo2](http://www.flickr.com/photos/shokai/4678255766/)
+
+
+Install
+-------
+use Eclipse, or
+
+    % android update project --path `pwd`
+    % ant debug
+    % adb install -r bin/GpsTracker-debug.apk
+
 
 Author
 ======
